@@ -10,12 +10,8 @@
 </head>
 <body <?php body_class(); ?>>
     <header>
-        <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/logo.png" alt="Logo de <?php bloginfo('name'); ?>" onclick="javascript:window.location='<?php echo home_url();?>'">
+        <?php logo_planty(['container' => true]); ?>
         <ul>
-            <li><a href="/nous-rencontrer">Nous rencontrer</a></li>
-            <?php if (current_user_can('manage_options')) : ?>
-                <li><a href="<?php echo admin_url(); ?>">Admin</a></li>
-            <?php endif; ?>
-            <li class="order"><a href="/commander">Commander</a></li>
+            <?php wp_nav_menu(['theme_location' => 'main-menu']); ?>
         </ul>
     </header>

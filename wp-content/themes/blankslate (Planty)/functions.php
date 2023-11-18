@@ -1,6 +1,49 @@
 <?php
-function theme_customizer_settings($wp_customize) {
 
+// Header (Bouton Admin)
+function nav_add_admin_button($items, $args) {
+    if (current_user_can('manage_options') && $args->theme_location == 'main-menu') {
+        $position_commander = strpos($items, '<li id="menu-item-order"');
+        if ($position_commander !== false) {
+            $bouton_admin = '<li><a href="' . admin_url() . '">Admin</a></li>';
+            $items = substr_replace($items, $bouton_admin, $position_commander, 0);
+        }
+    }
+    return $items;
+}
+add_filter('wp_nav_menu_items', 'nav_add_admin_button', 10, 2);
+
+// Header (Bouton Commander)
+function nav_add_class_and_id_order($class, $items, $args) {
+    if ($args->theme_location == 'main-menu' && $items->title == 'Commander') {
+        $class[] = 'order';
+        $items->ID = 'order';
+    }
+    return $class;
+}
+add_filter('nav_menu_css_class', 'nav_add_class_and_id_order', 10, 3);
+
+// Header (Logo)
+add_theme_support('custom-logo', array('height'=> 18,'width'=> 196));
+
+function logo_planty() {
+    $logo_id = get_theme_mod('custom_logo');
+    if ($logo_id) {
+        $logo_data = wp_get_attachment_image_src($logo_id, 'full');
+        the_custom_logo();
+    } else {
+        echo '<img src="' . get_stylesheet_directory_uri() . '/assets/images/logo.png" alt="Logo de ' . get_bloginfo('name') . '" onclick="javascript:window.location=\'' . home_url() . '\'">';
+    }
+}
+
+// Footer
+function register_footer_menu() {
+    register_nav_menu('footer-menu', 'Bas de page');
+}
+add_action('after_setup_theme', 'register_footer_menu');
+
+// Menu dans Personnaliser
+function theme_customizer_settings($wp_customize) {
     // Page d'accueil (Onglet)
     $wp_customize->add_section('home_page_settings', array(
         'title' => __('Page d\'accueil'),

@@ -2,7 +2,9 @@
 </div>
 <footer>
     <ul>
-        <li class="mentions-legales"><a href="#">Mentions légales</a></li>
+        <?php
+            wp_nav_menu(['theme_location' => 'footer-menu']);
+        ?>
     </ul>
 </footer>
 </div>

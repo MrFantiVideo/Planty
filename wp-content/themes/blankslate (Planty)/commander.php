@@ -73,7 +73,7 @@ Template Name: Commander
                 </div>
             </div>
             <div class="order-button">
-                <button type="submit">Commander</button>
+                <button type="submit" name="submit">Commander</button>
             </div>
         </div>
     </main>
