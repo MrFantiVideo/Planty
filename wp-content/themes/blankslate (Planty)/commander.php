@@ -12,7 +12,7 @@ Template Name: Commander
     $theme_url = get_stylesheet_directory_uri();
     $order_title = "Commander";
     $order_description = "Votre commande";
-    $email_order = "fantivideo654@gmail.com";
+    $email_order = "planty.drinks@gmail.com";
 ?>
 
 <main>
