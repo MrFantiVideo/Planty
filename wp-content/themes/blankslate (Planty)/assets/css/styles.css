@@ -83,7 +83,7 @@ header ul {
 
     header {
         flex-direction: column;
-        height: 248px;
+        height: 100%;
     }
 
     header img {
@@ -93,6 +93,7 @@ header ul {
 
     header ul {
         padding: 0;
+        margin: 0;
         flex-direction: column;
         width: 100%;
     }
@@ -104,7 +105,7 @@ header ul {
 
     h1 {
         padding-top: 40px !important;
-        font-size: 25px !important;
+        font-size: 24px !important;
     }
 
     .leaf-1 {
@@ -152,10 +153,18 @@ header ul {
         width: 200px !important;
     }
 
-    .order-card p{
+    .order-card p {
         margin-top: -50px !important;
         font-size: 18px !important;
         width: 200px !important;
+    }
+
+    .order-info {
+        width: 80%;
+    }
+
+    .order-delivery-infos {
+        width: 80%;
     }
 }
 
@@ -388,7 +397,6 @@ header .order a {
 .can-border {
     height: 200px;
     background-size: 2000px;
-    background-image: url(../images/can_border.png);
 }
 
 /* Footer */

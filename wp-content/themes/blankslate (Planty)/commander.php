@@ -10,45 +10,46 @@ Template Name: Commander
 
 <?php
     $theme_url = get_stylesheet_directory_uri();
-
-    $home_page_section_2_taste_1_title = "Fraise";
-    $home_page_section_2_taste_1_image = $theme_url . "/assets/images/taste_strawberry.png";
-    $home_page_section_2_taste_2_title = "Pample mousse";
-    $home_page_section_2_taste_2_image = $theme_url . "/assets/images/taste_moss_grape.png";
-    $home_page_section_2_taste_3_title = "Framboise";
-    $home_page_section_2_taste_3_image = $theme_url . "/assets/images/taste_raspberry.png";
-    $home_page_section_2_taste_4_title = "Citron";
-    $home_page_section_2_taste_4_image = $theme_url . "/assets/images/taste_lemon.png";
-
-    $email_order = "planty.drinks@gmail.com";
+    $order_title = "Commander";
+    $order_description = "Votre commande";
+    $email_order = "fantivideo654@gmail.com";
 ?>
 
-    <main>
-        <div class="order">
-            <h1>Commander</h1>
+<main>
+    <div class="order">
+        <h1><?php echo get_theme_mod('order_title', $order_title);?></h1>
+        <form method="post">
             <div class="order-selection">
-                <h2>Votre commande</h2>
+                <h2><?php echo get_theme_mod('order_description', $order_description);?></h2>
                 <div class="order-cards">
-                    <div class="order-card">
-                        <p><?php echo get_theme_mod('home_page_section_2_taste_1_title', $home_page_section_2_taste_1_title);?></p>
-                        <img src="<?php echo get_theme_mod('home_page_section_2_taste_1_image', $home_page_section_2_taste_1_image);?>" alt="<?php echo get_theme_mod('home_page_section_2_taste_1_title', $home_page_section_2_taste_1_title);?>">
-                        <input type="number" value="0" min="0" name="tastes_1">
-                    </div>
-                    <div class="order-card">
-                        <p><?php echo get_theme_mod('home_page_section_2_taste_2_title', $home_page_section_2_taste_2_title);?></p>
-                        <img src="<?php echo get_theme_mod('home_page_section_2_taste_2_image', $home_page_section_2_taste_2_image);?>" alt="<?php echo get_theme_mod('home_page_section_2_taste_2_title', $home_page_section_2_taste_2_title);?>">
-                        <input type="number" value="0" min="0" name="tastes_2">
-                    </div>
-                    <div class="order-card">
-                        <p><?php echo get_theme_mod('home_page_section_2_taste_3_title', $home_page_section_2_taste_3_title);?></p>
-                        <img src="<?php echo get_theme_mod('home_page_section_2_taste_3_image', $home_page_section_2_taste_3_image);?>" alt="<?php echo get_theme_mod('home_page_section_2_taste_3_title', $home_page_section_2_taste_3_title);?>">
-                        <input type="number" value="0" min="0" name="tastes_3">
-                    </div>
-                    <div class="order-card">
-                        <p><?php echo get_theme_mod('home_page_section_2_taste_4_title', $home_page_section_2_taste_4_title);?></p>
-                        <img src="<?php echo get_theme_mod('home_page_section_2_taste_4_image', $home_page_section_2_taste_4_image);?>" alt="<?php echo get_theme_mod('home_page_section_2_taste_4_title', $home_page_section_2_taste_4_title);?>">
-                        <input type="number" value="0" min="0" name="tastes_4">
-                    </div>
+                    <?php
+                        $args = array(
+                            'post_type'      => 'tastes',
+                            'posts_per_page' => -1,
+                        );
+                        $query = new WP_Query($args);
+
+                        if ($query->have_posts()) {
+                            $count = 0;
+                            while ($query->have_posts()) {
+                                $query->the_post();
+                                $count++;
+                                $title = get_the_title();
+                                $image = get_the_post_thumbnail_url(get_the_ID(), 'full');
+                                ?>
+                                <div class="order-card">
+                                    <p><?php echo $title; ?></p>
+                                    <img src="<?php echo $image; ?>" alt="<?php echo $title; ?>">
+                                    <input type="number" value="0" min="0" name="tastes[<?php echo get_the_ID(); ?>]">
+                                </div>
+                                <?php
+                            }
+                        } else {
+                            echo 'Pas de goûts disponibles.';
+                        }
+
+                        wp_reset_postdata();
+                    ?>
                 </div>
             </div>
             <div class="order-infos">
@@ -75,25 +76,25 @@ Template Name: Commander
             <div class="order-button">
                 <button type="submit" name="submit">Commander</button>
             </div>
-        </div>
-    </main>
+        </form>
+    </div>
+</main>
 
 <?php
-if (isset($_POST['submit'])) {
-    $name = $_POST['name'];
-    $firstname = $_POST['firstname'];
-    $email = $_POST['email'];
-    $address = $_POST['address'];
-    $postal = $_POST['postal'];
-    $city = $_POST['city'];
-    $tastes_1 = $_POST['tastes_1'];
-    $tastes_2 = $_POST['tastes_2'];
-    $tastes_3 = $_POST['tastes_3'];
-    $tastes_4 = $_POST['tastes_4'];
-    $to = get_theme_mod('email_order', $email_order);
-    $subject = 'Nouvelle commande';
+    if (isset($_POST['submit']))
+    {
+        // Collecte des informations du formulaire
+        $name = $_POST['name'];
+        $firstname = $_POST['firstname'];
+        $email = $_POST['email'];
+        $address = $_POST['address'];
+        $postal = $_POST['postal'];
+        $city = $_POST['city'];
+        $tastes = $_POST['tastes'];
+        $to = get_theme_mod('email_order', $email_order);
+        $subject = 'Nouvelle commande';
 
-    if (!empty($address) && !empty($tastes_1) && !empty($tastes_2) && !empty($tastes_3) && !empty($tastes_4)) {
+        // Construction du message
         $headers = 'From: ' . $email;
         $message_content = "Nom: $name\n";
         $message_content .= "Prénom: $firstname\n";
@@ -101,13 +102,28 @@ if (isset($_POST['submit'])) {
         $message_content .= "Adresse:\n$address\n";
         $message_content .= "Code postal:\n$postal\n";
         $message_content .= "Ville:\n$city\n";
-        $message_content .= "Article 1:\n$tastes_1\n";
-        $message_content .= "Article 2:\n$tastes_2\n";
-        $message_content .= "Article 3:\n$tastes_3\n";
-        $message_content .= "Article 4:\n$tastes_4\n";
-        mail($to, $subject, $message_content, $headers);
+
+        // Ajout des goûts à la commande
+        foreach ($tastes as $taste_id => $quantity)
+        {
+            if (!empty($quantity))
+            {
+                $taste_id = intval($taste_id);
+                $taste_post = get_post($taste_id);
+                if ($taste_post)
+                {
+                    $taste_title = $taste_post->post_title;
+                    $message_content .= "Goût: $taste_title - Quantité: $quantity\n";
+                }
+            }
+        }
+
+        // Envoi de l'email
+        if (!empty($address) && count(array_filter($tastes)) > 0)
+        {
+            mail($to, $subject, $message_content, $headers);
+        }
     }
-}
 ?>
 
 <?php
